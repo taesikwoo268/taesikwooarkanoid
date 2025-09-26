@@ -1,0 +1,39 @@
+name: Notify Changelog
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Extract last changelog section
+        id: changelog
+        run: |
+          CONTENT=$(awk '
+            /^## / { pos=NR }        # nhớ lại dòng ## cuối cùng
+            { lines[NR]=$0 }         # lưu toàn bộ dòng
+            END {
+              for (i=pos; i<=NR; i++) print lines[i]
+            }
+          ' CHANGELOG.md)
+
+          # Ghi multiline vào biến môi trường
+          echo "CONTENT<<EOF" >> $GITHUB_ENV
+          echo "$CONTENT" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Send to Discord
+        run: |
+          # Escape các dấu quote trong CONTENT thành JSON hợp lệ
+          ESCAPED_CONTENT=$(jq -Rn --arg content "$CONTENT" '{"content": $content}')
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d "$ESCAPED_CONTENT" \
+               ${{ secrets.DISCORD_WEBHOOK }}
