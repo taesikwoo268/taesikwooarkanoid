@@ -1,16 +1,20 @@
 package core;
 
 import game.GameScene;
+import ui.MenuScene;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class GameEngine extends JPanel implements Runnable{
     private Thread gameThread;
+    private boolean menu = false;
+    private boolean shopping = false;
     private boolean running = false;
 
     private InputHandler input;
     private GameScene gameScene;
+    private MenuScene menuScene;
 
     public GameEngine() {
         setPreferredSize(new Dimension(Constants.WIDTH, Constants.HEIGHT));
@@ -21,8 +25,14 @@ public class GameEngine extends JPanel implements Runnable{
         addKeyListener(input);
 
         gameScene = new GameScene(input);
+        menuScene = new MenuScene(input);
     }
-
+    public void startMenu() {
+        if(menu) return;
+        menu = true;
+        gameThread = new Thread(this);
+        gameThread.start();
+    }
     public void start() {
         if (running) return;
         running = true;
@@ -63,4 +73,8 @@ public class GameEngine extends JPanel implements Runnable{
 
         gameScene.render(g);
     }
+    public void setRunning(boolean running) {this.running=running;};
+    public void setShopping(boolean shopping) {this.shopping=shopping;};
+    public void setMenu(boolean menu) {this.menu = menu;};
+
 }

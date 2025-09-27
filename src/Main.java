@@ -1,5 +1,6 @@
 import javax.swing.*;
 import core.GameEngine;
+import ui.MenuScene;
 
 public class Main {
     public static void main(String[] args) {
