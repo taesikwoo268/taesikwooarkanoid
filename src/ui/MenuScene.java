@@ -18,15 +18,17 @@ public class MenuScene extends JPanel  {
 
     private final Runnable onPlay;
     private final Runnable onShop;
+    private final Runnable onInventory;
     private final Runnable onQuit;
 
     private ImageIcon backgroundGif;
 
     //Constructor
-    public MenuScene(InputHandler input, Runnable onPlay, Runnable onShop, Runnable onQuit) {
+    public MenuScene(InputHandler input, Runnable onPlay, Runnable onShop,Runnable onInventory, Runnable onQuit) {
         this.input = input;
         this.onPlay = onPlay;
         this.onShop = onShop;
+        this.onInventory = onInventory;
         this.onQuit = onQuit;
 
         setBackground(Color.BLACK);
@@ -35,7 +37,7 @@ public class MenuScene extends JPanel  {
         Font font = new Font("Serif", Font.PLAIN, 32);
         FontMetrics fm = getFontMetrics(font);
 
-        String[] texts = {"PLAY", "SHOP", "QUIT"};
+        String[] texts = {"PLAY", "SHOP", "INVENTORY", "QUIT"};
         int startY = 350;
         int spacing = 50;
 
@@ -45,7 +47,7 @@ public class MenuScene extends JPanel  {
         //mouse
         addMouseListener(input.createMouseAdapter());
         addMouseMotionListener(input.createMouseAdapter());
-        // Dùng Timer để tự động repaint menu
+
         new javax.swing.Timer(16, e -> repaint()).start();
     }
 
@@ -55,7 +57,7 @@ public class MenuScene extends JPanel  {
 
         for (Button button : buttons) {
             button.hovered = button.contains(mx,my);
-            if(button.hovered && input.isMousePressed()) {
+            if(button.hovered && input.consumeClick()) {
                 System.out.println("Clicked"+button.text);
                 switch (button.text) {
                     case "PLAY":
@@ -63,6 +65,9 @@ public class MenuScene extends JPanel  {
                         break;
                     case "SHOP":
                         onShop.run();
+                        break;
+                    case "INVENTORY":
+                        onInventory.run();
                         break;
                     case "QUIT":
                         System.exit(0);

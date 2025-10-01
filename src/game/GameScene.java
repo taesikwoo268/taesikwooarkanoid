@@ -67,8 +67,10 @@ public class GameScene {
         ball.update();
 
         // Bóng - paddle
+        CollisionSystem.effectCollision(ball,paddle);
         CollisionSystem.handleBallCollision(ball, paddle, true);
         CollisionSystem.handleBallInsideEntity(ball, paddle);
+
 
         // Bóng - gạch
         for (int i = 0; i < bricks.size(); i++) {

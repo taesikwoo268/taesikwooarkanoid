@@ -47,4 +47,8 @@ public class Button {
     public boolean contains(int mx,int my) {
         return bound.contains(mx,my);
     }
+    public int getY() {
+        return this.bound.y; // nếu bạn có biến y lưu vị trí nút
+    }
+
 }

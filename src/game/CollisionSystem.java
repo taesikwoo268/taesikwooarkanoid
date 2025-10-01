@@ -2,9 +2,12 @@ package game;
 
 import core.Constants;
 import entity.Ball;
+import entity.Paddle;
 import entity.Entity;
 import utils.MathUtils;
 import utils.Vector2D;
+
+import javax.swing.Timer;
 
 public class CollisionSystem {
 
@@ -93,6 +96,7 @@ public class CollisionSystem {
 
             if (isPaddle) {
                 // logic riêng cho paddle
+
             }
             return true;
         }
@@ -116,5 +120,26 @@ public class CollisionSystem {
 
         ball.clampPosition();
     }
+//    public void effectCollision(Ball ball,Paddle paddle) {
+//        if (checkCollision(ball,paddle)) {
+//            paddle.setImg(paddle.getSprite(1));
+//        }
+//        else{
+//            paddle.setImg(paddle.getSprite(0));
+//        }
+//    }
+    public static void effectCollision(Ball ball, Paddle paddle) {
+        if (checkCollision(ball, paddle)) {
+            // đổi sang sprite 1 ngay khi va chạm
+            paddle.setImg(paddle.getSprite(1));
+
+            // sau 200ms thì đổi lại sprite 0
+            new javax.swing.Timer(200, e -> {
+                paddle.setImg(paddle.getSprite(0));
+                ((javax.swing.Timer) e.getSource()).stop(); // dừng timer sau khi chạy
+            }).start();
+        }
+    }
+
 
 }
